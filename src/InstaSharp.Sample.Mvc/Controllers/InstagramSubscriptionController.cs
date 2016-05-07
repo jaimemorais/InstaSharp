@@ -15,8 +15,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
     [RoutePrefix("api/instagram")]
     public class InstagramSubscriptionController : ApiController
     {
-        static string clientId = ConfigurationManager.AppSettings["MS_WebHookReceiverSecret_InstagramId"];
-        static string clientSecret = ConfigurationManager.AppSettings["MS_WebHookReceiverSecret_Instagram"];
+        static string clientId = ConfigurationManager.AppSettings["instagram_client_id"];
+        static string clientSecret = ConfigurationManager.AppSettings["instagram_client_secret"];
         static string redirectUri = ConfigurationManager.AppSettings["redirectUri"];
         static string callbackUri = ConfigurationManager.AppSettings["callbackUri"];
 

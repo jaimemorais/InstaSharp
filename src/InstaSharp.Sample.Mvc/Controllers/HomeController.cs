@@ -1,4 +1,5 @@
-﻿using InstaSharp.Models.Responses;
+﻿using InstaSharp.Endpoints;
+using InstaSharp.Models.Responses;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -8,8 +9,8 @@ namespace InstaSharp.Sample.Mvc.Controllers
 {
     public class HomeController : Controller
     {
-        static string clientId = ConfigurationManager.AppSettings["MS_WebHookReceiverSecret_InstagramId"];
-        static string clientSecret = ConfigurationManager.AppSettings["MS_WebHookReceiverSecret_Instagram"];
+        static string clientId = ConfigurationManager.AppSettings["instagram_client_id"];
+        static string clientSecret = ConfigurationManager.AppSettings["instagram_client_secret"];
         static string redirectUri = ConfigurationManager.AppSettings["redirectUri"];
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
@@ -51,9 +52,9 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return RedirectToAction("Login");
             }
 
-            var users = new Endpoints.Users(config, oAuthResponse);
+            Users users = new Endpoints.Users(config, oAuthResponse);
 
-            var feed = await users.Feed(null, null, null);
+            var feed = await users.RecentSelf();
 
             return View(feed.Data);
         }

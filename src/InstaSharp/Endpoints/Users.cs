@@ -74,24 +74,6 @@ namespace InstaSharp.Endpoints
             return Client.ExecuteAsync<UserResponse>(request);
         }
 
-        /// <summary>
-        /// See the authenticated user's feed.
-        /// <para>Requires Authentication: True</para>
-        /// </summary>
-        /// <param name="maxId">The maximum identifier.</param>
-        /// <param name="minId">The minimum identifier.</param>
-        /// <param name="count">The count.</param>
-        /// <returns>Media Response</returns>
-        public Task<MediasResponse> Feed(string maxId, string minId, int? count)
-        {
-            var request = Request("self/feed");
-
-            request.AddParameter("max_id", maxId);
-            request.AddParameter("min_id", minId);
-            request.AddParameter("count", count);
-
-            return Client.ExecuteAsync<MediasResponse>(request);
-        }
 
         /// <summary>
         /// Get the most recent media published by the logged in user.

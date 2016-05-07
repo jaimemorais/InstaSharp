@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaSharp.Sample.Mvc", "src\InstaSharp.Sample.Mvc\InstaSharp.Sample.Mvc.csproj", "{4D4E2CE2-0CAB-4B84-9503-CC37C15FC6D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaSharp", "src\InstaSharp\InstaSharp.csproj", "{CD3EA37A-6C9D-4B74-A2A8-1483259FB1B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaSharp.Tests", "src\InstaSharp.Tests\InstaSharp.Tests.csproj", "{32025768-5A2A-4085-A95E-D6B5E616034C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CCA4D480-127A-4675-8BA8-250E411BF433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +21,19 @@ Global
 		{4D4E2CE2-0CAB-4B84-9503-CC37C15FC6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D4E2CE2-0CAB-4B84-9503-CC37C15FC6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D4E2CE2-0CAB-4B84-9503-CC37C15FC6D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3EA37A-6C9D-4B74-A2A8-1483259FB1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3EA37A-6C9D-4B74-A2A8-1483259FB1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3EA37A-6C9D-4B74-A2A8-1483259FB1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3EA37A-6C9D-4B74-A2A8-1483259FB1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32025768-5A2A-4085-A95E-D6B5E616034C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32025768-5A2A-4085-A95E-D6B5E616034C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32025768-5A2A-4085-A95E-D6B5E616034C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32025768-5A2A-4085-A95E-D6B5E616034C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{32025768-5A2A-4085-A95E-D6B5E616034C} = {CCA4D480-127A-4675-8BA8-250E411BF433}
 	EndGlobalSection
 EndGlobal
