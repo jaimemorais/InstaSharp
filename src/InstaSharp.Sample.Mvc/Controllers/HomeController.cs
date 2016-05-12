@@ -1,4 +1,5 @@
 ﻿using InstaSharp.Endpoints;
+using InstaSharp.Models;
 using InstaSharp.Models.Responses;
 using System.Collections.Generic;
 using System.Configuration;
@@ -25,7 +26,9 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return RedirectToAction("Login");
             }
 
-            return View(oAuthResponse.User);            
+            UserInfo userInfo = oAuthResponse.User;
+
+            return View(userInfo);            
         }
 
         public ActionResult Login()
@@ -43,6 +46,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return Redirect(link);
         }
 
+
         public async Task<ActionResult> MyFeed()
         {
             var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
@@ -52,13 +56,16 @@ namespace InstaSharp.Sample.Mvc.Controllers
                 return RedirectToAction("Login");
             }
 
-            Users users = new Endpoints.Users(config, oAuthResponse);
 
-            var feed = await users.RecentSelf();
 
-            return View(feed.Data);
+            Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
+
+            MediasResponse mediasReponse = await usersEndpoint.RecentSelf();
+            List<InstaSharp.Models.Media> listaMedias = mediasReponse.Data;
+
+            return View(listaMedias);
         }
-
+        
         public async Task<ActionResult> OAuth(string code)
         {
             // add this code to the auth object
