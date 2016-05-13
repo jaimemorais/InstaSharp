@@ -1,6 +1,7 @@
 ﻿using InstaSharp.Endpoints;
 using InstaSharp.Models;
 using InstaSharp.Models.Responses;
+using InstaSharp.Sample.Mvc.ModelsJaime;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -59,13 +60,32 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
 
             Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
+            
 
-            MediasResponse mediasReponse = await usersEndpoint.RecentSelf();
-            List<InstaSharp.Models.Media> listaMedias = mediasReponse.Data;
+            MediasResponse mediasResponse = await usersEndpoint.RecentSelf();
+            List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
+            
 
-            return View(listaMedias);
+            // testing another endpoint
+            List<MediaComOutrosDados> listaMediasComOutrosDados = new List<MediaComOutrosDados>();
+
+            InstaSharp.Endpoints.Likes likesEndpoint = new Endpoints.Likes(config, oAuthResponse);
+            foreach(InstaSharp.Models.Media media in listaMedias)
+            {
+                MediaComOutrosDados mc = new MediaComOutrosDados();
+                mc.Media = media;
+
+                UsersResponse ur = await likesEndpoint.Get(media.Id);
+                int totalLikesMedia = ur.Data.Count;
+                mc.TotalLikesMedia = totalLikesMedia;    //or mc.TotalLikesMedia = media.Likes.Count;
+
+                listaMediasComOutrosDados.Add(mc);
+            }
+
+
+            return View(listaMediasComOutrosDados);
         }
-        
+                
         public async Task<ActionResult> OAuth(string code)
         {
             // add this code to the auth object
@@ -84,4 +104,5 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return RedirectToAction("Index");
         }
     }
+
 }

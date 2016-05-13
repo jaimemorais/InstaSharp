@@ -1,4 +1,4 @@
-﻿@model IEnumerable<InstaSharp.Models.Media>
+﻿@model IEnumerable<InstaSharp.Sample.Mvc.ModelsJaime.MediaComOutrosDados>
 
 @{
     Layout = null;
@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>MyPhotos</title>
+    <title>Self Media</title>
 </head>
 <body>
 
@@ -17,7 +17,9 @@
     @foreach (var item in Model)
     {
         <div>
-            <img src="@item.Images.StandardResolution.Url" />
+            <img src="@item.Media.Images.StandardResolution.Url" />
+            <br />
+            <p>Likes : @item.TotalLikesMedia</p>
         </div>
     }
 
