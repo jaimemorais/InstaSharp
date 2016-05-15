@@ -66,18 +66,36 @@ namespace InstaSharp.Sample.Mvc.Controllers
             List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
             
 
-            // testing another endpoint
+            // testing likes endpoint
             List<MediaComOutrosDados> listaMediasComOutrosDados = new List<MediaComOutrosDados>();
-
             InstaSharp.Endpoints.Likes likesEndpoint = new Endpoints.Likes(config, oAuthResponse);
-            foreach(InstaSharp.Models.Media media in listaMedias)
+
+            foreach (InstaSharp.Models.Media media in listaMedias)
             {
+
+                // ** MODO SANDBOX : 
+                // Data is restricted to the 10 users and the 20 most recent media from each of those users
+
                 MediaComOutrosDados mc = new MediaComOutrosDados();
                 mc.Media = media;
 
-                UsersResponse ur = await likesEndpoint.Get(media.Id);
-                int totalLikesMedia = ur.Data.Count;
+                // total likes
+                UsersResponse urLike = await likesEndpoint.Get(media.Id);
+                int totalLikesMedia = urLike.Data.Count;
                 mc.TotalLikesMedia = totalLikesMedia;    //or mc.TotalLikesMedia = media.Likes.Count;
+                
+                // usuarios que deram like
+                List<User> usuariosQueDeramLike = urLike.Data;
+                List<string> usernamesQueDeramLike = new List<string>();
+                if (usuariosQueDeramLike != null)
+                {
+                    foreach (User userLike in usuariosQueDeramLike)
+                    {
+                        usernamesQueDeramLike.Add(userLike.Username);
+                    }
+                }
+                mc.UsuariosQueDeramLike = usernamesQueDeramLike;
+
 
                 listaMediasComOutrosDados.Add(mc);
             }
