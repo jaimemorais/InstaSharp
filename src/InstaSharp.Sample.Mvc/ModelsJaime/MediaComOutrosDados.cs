@@ -13,6 +13,8 @@ namespace InstaSharp.Sample.Mvc.ModelsJaime
     {
         public InstaSharp.Models.Media Media { get; set; }
 
-        public int TotalLikesMedia { get; set; } // We can use InstaSharp.Models.Media.Likes
+        public int TotalLikesMedia { get; set; } // just for testing. we can use InstaSharp.Models.Media.Likes
+
+        public List<string> UsuariosQueDeramLike { get; set; }
     }
 }

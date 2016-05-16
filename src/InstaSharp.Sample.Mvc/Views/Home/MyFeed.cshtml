@@ -20,6 +20,12 @@
             <img src="@item.Media.Images.StandardResolution.Url" />
             <br />
             <p>Likes : @item.TotalLikesMedia</p>
+            <p>Usuarios que deram Like : 
+            @foreach (var userLike in item.UsuariosQueDeramLike)
+            {
+                @userLike ;
+            }
+            </p>
         </div>
     }
 
