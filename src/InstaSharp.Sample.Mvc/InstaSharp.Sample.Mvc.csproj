@@ -153,7 +153,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="ModelsJaime\MediaComOutrosDados.cs" />
+    <Compile Include="ModelsJaime\MediaJaime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +162,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\MyFeed.cshtml" />
     <None Include="Properties\PublishProfiles\instasharpapi.pubxml" />
+    <Content Include="Views\Home\Stats.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

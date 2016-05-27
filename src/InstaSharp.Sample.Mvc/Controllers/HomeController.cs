@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Linq;
+using System;
 
 namespace InstaSharp.Sample.Mvc.Controllers
 {
@@ -17,7 +19,7 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
         InstagramConfig config = new InstagramConfig(clientId, clientSecret, redirectUri, "");
 
-        // GET: Home
+        #region region Index-Login-OAuth
         public ActionResult Index()
         {
             var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
@@ -47,63 +49,6 @@ namespace InstaSharp.Sample.Mvc.Controllers
             return Redirect(link);
         }
 
-
-        public async Task<ActionResult> MyFeed()
-        {
-            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
-
-            if (oAuthResponse == null)
-            {
-                return RedirectToAction("Login");
-            }
-
-
-
-            Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
-            
-
-            MediasResponse mediasResponse = await usersEndpoint.RecentSelf();
-            List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
-            
-
-            // testing likes endpoint
-            List<MediaComOutrosDados> listaMediasComOutrosDados = new List<MediaComOutrosDados>();
-            InstaSharp.Endpoints.Likes likesEndpoint = new Endpoints.Likes(config, oAuthResponse);
-
-            foreach (InstaSharp.Models.Media media in listaMedias)
-            {
-
-                // ** MODO SANDBOX : 
-                // Data is restricted to the 10 users and the 20 most recent media from each of those users
-
-                MediaComOutrosDados mc = new MediaComOutrosDados();
-                mc.Media = media;
-
-                // total likes
-                UsersResponse urLike = await likesEndpoint.Get(media.Id);
-                int totalLikesMedia = urLike.Data.Count;
-                mc.TotalLikesMedia = totalLikesMedia;    //or mc.TotalLikesMedia = media.Likes.Count;
-                
-                // usuarios que deram like
-                List<User> usuariosQueDeramLike = urLike.Data;
-                List<string> usernamesQueDeramLike = new List<string>();
-                if (usuariosQueDeramLike != null)
-                {
-                    foreach (User userLike in usuariosQueDeramLike)
-                    {
-                        usernamesQueDeramLike.Add(userLike.Username);
-                    }
-                }
-                mc.UsuariosQueDeramLike = usernamesQueDeramLike;
-
-
-                listaMediasComOutrosDados.Add(mc);
-            }
-
-
-            return View(listaMediasComOutrosDados);
-        }
-                
         public async Task<ActionResult> OAuth(string code)
         {
             // add this code to the auth object
@@ -120,6 +65,126 @@ namespace InstaSharp.Sample.Mvc.Controllers
 
             // all done, lets redirect to the home controller which will send some intial data to the app
             return RedirectToAction("Index");
+        }
+        #endregion
+
+
+        public async Task<ActionResult> MyFeed()
+        {
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
+
+            MediasResponse mediasResponse = await usersEndpoint.RecentSelf();
+            List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
+
+
+            // testing likes endpoint
+            List<MediaJaime> listaMediasComOutrosDados = new List<MediaJaime>();
+            InstaSharp.Endpoints.Likes likesEndpoint = new Endpoints.Likes(config, oAuthResponse);
+
+            foreach (InstaSharp.Models.Media media in listaMedias)
+            {
+
+                // ** MODO SANDBOX : 
+                // Data is restricted to the 10 users and the 20 most recent media from each of those users
+
+                MediaJaime mj = new MediaJaime();
+                mj.Media = media;
+
+                // total likes
+                UsersResponse urLike = await likesEndpoint.Get(media.Id);
+                int totalLikesMedia = urLike.Data.Count;
+                mj.TotalLikes = totalLikesMedia;    //or mc.TotalLikesMedia = media.Likes.Count;
+
+                // usuarios que deram like
+                List<User> usuariosQueDeramLike = urLike.Data;
+                List<string> usernamesQueDeramLike = new List<string>();
+                if (usuariosQueDeramLike != null)
+                {
+                    foreach (User userLike in usuariosQueDeramLike)
+                    {
+                        usernamesQueDeramLike.Add(userLike.Username);
+                    }
+                }
+                mj.UsuariosQueDeramLike = usernamesQueDeramLike;
+
+
+                listaMediasComOutrosDados.Add(mj);
+            }
+
+
+            return View(listaMediasComOutrosDados);
+        }
+
+
+        public async Task<ActionResult> Stats()
+        {
+            var oAuthResponse = Session["InstaSharp.AuthInfo"] as OAuthResponse;
+            if (oAuthResponse == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+
+            // Foto com mais likes e mais comentadas
+            await ObterListaFotosComMaisLikesEComentadas(oAuthResponse);
+
+            await ObterListaComentariosPorDia(oAuthResponse);
+
+            return View();
+        }
+
+        private async Task ObterListaFotosComMaisLikesEComentadas(OAuthResponse oAuthResponse)
+        {
+            Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
+
+            MediasResponse mediasResponse = await usersEndpoint.RecentSelf();
+            List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
+                                    
+            ViewBag.ListaFotosComMaisLikes = listaMedias.OrderByDescending(m => m.Likes.Count).ToList();
+
+            ViewBag.ListaFotosComMaisComments = listaMedias.OrderByDescending(m => m.Comments.Count).ToList();
+
+            
+        }
+
+        private async Task ObterListaComentariosPorDia(OAuthResponse oAuthResponse)
+        {
+            Users usersEndpoint = new Endpoints.Users(config, oAuthResponse);
+
+            MediasResponse mediasResponse = await usersEndpoint.RecentSelf();
+            List<InstaSharp.Models.Media> listaMedias = mediasResponse.Data;
+
+            InstaSharp.Endpoints.Comments commentsEndpoint = new Endpoints.Comments(config, oAuthResponse);
+
+            List<MediaJaime> listaMediaJaime = new List<MediaJaime>();
+
+            foreach (InstaSharp.Models.Media media in listaMedias)
+            {
+                MediaJaime mj = new MediaJaime();
+                mj.Media = media;
+                
+                CommentsResponse cr = await commentsEndpoint.Get(media.Id);
+                List<Comment> listaComentarios = cr.Data;
+
+                Dictionary<DateTime, int> comentariosPorDia =              
+                    listaComentarios
+                        .GroupBy(c => c.CreatedTime.Date)
+                        .ToDictionary(c => c.Key, c => c.ToList().Count);
+                
+                mj.QtdComentariosPorDia = comentariosPorDia;
+
+                listaMediaJaime.Add(mj);
+            }
+
+            ViewBag.ListaComentariosPorDia = listaMediaJaime;
+
         }
     }
 

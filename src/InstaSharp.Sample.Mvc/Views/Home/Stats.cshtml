@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Stats</title>
+</head>
+<body>
+
+    <!-- Fotos com mais likes -->
+    <br/>
+    <h3>Fotos com mais Likes</h3>
+    <table border="1">
+        <tr>
+            <th>Foto</th>
+            <th>Data Publicação</th>
+            <th>Quantidade Likes</th>
+        </tr>
+
+        @foreach (var item in (List<InstaSharp.Models.Media>)ViewBag.ListaFotosComMaisLikes)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Images.Thumbnail.Url" />
+                </td>
+                <td>
+                    @item.CreatedTime
+                </td>
+                <td>
+                    @item.Likes.Count
+                </td>
+            </tr>
+        }
+    </table>
+
+    <!-- Fotos com mais comentarios -->
+    <br />
+    <h3>Fotos com mais Comentarios</h3>
+    <table border="1">
+        <tr>
+            <th>Foto</th>
+            <th>Data Publicação</th>
+            <th>Quantidade Comentarios</th>
+        </tr>
+
+        @foreach (var item in (List<InstaSharp.Models.Media>)ViewBag.ListaFotosComMaisComments)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Images.Thumbnail.Url" />
+                </td>
+                <td>
+                    @item.CreatedTime
+                </td>
+                <td>
+                    @item.Comments.Count
+                </td>
+            </tr>
+        }
+    </table>
+
+
+    <!-- Fotos com comentarios por dia -->
+    <h3>Fotos e qtd de comentarios por dia</h3>
+    <table border="1">
+        <tr>
+            <th>Foto</th>
+            <th>Data Publicação</th>
+            <th>Quantidade Comentarios</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in (List<InstaSharp.Sample.Mvc.ModelsJaime.MediaJaime>)ViewBag.ListaComentariosPorDia)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Media.Images.Thumbnail.Url" />
+                </td>
+                <td>
+                    @item.Media.CreatedTime
+                </td>
+                <td>
+                    @item.Media.Comments.Count
+                </td>
+                <td>
+                    <table>
+                        @foreach (var comentarioDia in item.QtdComentariosPorDia.Keys)
+                        {
+                            <tr>
+                                @comentarioDia.Date - @item.QtdComentariosPorDia[comentarioDia] 
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        }
+    </table>
+
+
+
+</body>
+</html>

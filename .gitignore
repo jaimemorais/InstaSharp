@@ -100,3 +100,4 @@ Desktop.ini
 /packages
 
 /InstaSharp.Samples.MVC
+/.vs/config/applicationhost.config
