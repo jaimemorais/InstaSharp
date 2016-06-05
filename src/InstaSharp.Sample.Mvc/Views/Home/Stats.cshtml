@@ -91,7 +91,8 @@
                         @foreach (var comentarioDia in item.QtdComentariosPorDia.Keys)
                         {
                             <tr>
-                                @comentarioDia.Date - @item.QtdComentariosPorDia[comentarioDia] 
+                                <br/>
+                                @comentarioDia.Date : @item.QtdComentariosPorDia[comentarioDia] 
                             </tr>
                         }
                     </table>
